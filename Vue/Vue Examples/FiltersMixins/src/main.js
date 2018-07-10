@@ -6,7 +6,7 @@ Vue.filter('to-lowercase', function(value) {
 });
 
 Vue.filter('addStringLength', function(value) {
-    return value + ' (' + value.length + ')'
+    return value + ' (' + value.length + ')';
 })
 
 Vue.mixin({

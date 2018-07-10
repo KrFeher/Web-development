@@ -6,5 +6,5 @@ export const exampleMixins = {
         showNumberWithSecond() {
             return this.exampleText2 + ' (' + this.exampleText2.length + ')';
         }
-    }
+    } 
 }
