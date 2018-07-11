@@ -105,7 +105,7 @@
           terms: this.terms
         }
         console.log(formData)
-        Axios.post('https://httpexample-8d61e.firebaseio.com/users.json', formData) 
+        Axios.post('/users.json', formData) 
         .then(result => console.log(result))
         .catch(error => console.log(error));
       }
