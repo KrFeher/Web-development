@@ -16,9 +16,17 @@
   import AppControlInput from '@/components/UI/AppControlInput.vue';
 
   export default {
+    props: {
+      post: {
+        type: Object,
+        required: false 
+      },
+    },
     data() {
-      return {
-        editedPost: {
+      return { 
+        editedPost: this.post 
+        ? { ...this.post } 
+        : {
           author: '',
           title: '',
           thumbnailLink: '',
