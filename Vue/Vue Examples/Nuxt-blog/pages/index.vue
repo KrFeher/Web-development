@@ -3,23 +3,41 @@
     <section class="intro">
       <h1>Get the latest tech news!</h1>
     </section>
-    <PostList />
+    <PostList :posts="loadedPosts" />
   </div>
 </template>
 
 <script>
   import PostList from "@/components/posts/PostList.vue";
 
-
   export default {
     components: {
       PostList: PostList
+    },
+    computed: {
+      loadedPosts() {
+        return this.$store.getters.loadedPosts
+      }
     }
   }
 </script>
 
-
 <style scoped>
+
+@media (min-width: 768px) {
+  .intro h1 {
+    font-size: 2rem;
+  }
+}
+
+.featured-posts {
+  display: flex;
+  padding: 20px;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
   .intro {
     height: 300px;
     position: relative;
@@ -43,11 +61,5 @@
     box-shadow: 3px 3px 3px black;
     box-sizing: border-box;
     border: 1px solid black;
-  }
-
-  @media (min-width: 768px) {
-    .intro h1 {
-      font-size: 2rem;
-    }
   }
 </style>

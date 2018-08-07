@@ -1,23 +1,12 @@
 <template>
     <section class="post-list">
       <PostPreview
-      id="1"
-      title="Hello!"
-      previewText="I'm a preview text"
-      thumbnail="https://picsum.photos/500/300/?random"
+      v-for="post in posts" :key="post.id"
+      :id="post.id"
+      :title="post.title"
+      :previewText="post.previewText"
+      :thumbnail="post.thumbnail"
       :is-admin="isAdmin" />
-      <PostPreview
-      id="2"
-      title="Hello2!"
-      previewText="I'm a preview text2"
-      thumbnail="https://picsum.photos/500/300/?random"
-      :is-admin="isAdmin"/>
-      <PostPreview
-      id="3"
-      title="Hello3!"
-      previewText="I'm a preview text3"
-      thumbnail="https://picsum.photos/500/300/?random"
-      :is-admin="isAdmin"/>
     </section>
 </template>
 
@@ -32,6 +21,10 @@
             isAdmin: {
                 type: Boolean,
                 default: false
+            },
+            posts: {
+                type: Array,
+                required: true
             }
         }
     }
