@@ -8,21 +8,21 @@
 
 <script>
   import AdminPostForm from '@/components/Admin/AdminPostForm.vue';
+  import axios from 'axios'
 
   export default {
     layout: 'admin',
     components: {
       AdminPostForm
     },
-    data() {
-      return {
-        loadedPost: {
-          author: 'Krisztian Feher',
-          title: 'Hello Blog',
-          thumbnailLink: 'https://picsum.photos/500/300/?random',
-          content: 'This is the first blog post'
-        }
-      }
+    asyncData(context) {
+      return axios.get('https://nuxt-blog-72afc.firebaseio.com/posts/' + context.params.postId + '.json')
+        .then(result => {
+          return {
+            loadedPost: result.data
+            }
+          })
+        .catch(error => context.error(error));
     },
   }
 </script>
