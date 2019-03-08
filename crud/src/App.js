@@ -1,26 +1,27 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Grid } from 'semantic-ui-react'
+import MobileMenu from './components/MobileMenu';
+import NoteList from './components/NoteList';
+import { Route, Switch } from "react-router-dom";
+import NoteCalendar from './components/NoteCalendar';
+import AddNote from './components/AddNote';
+import NoMatch from './components/NoMatch';
+
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Grid centered columns={1}>
+        <Grid.Column computer={12} tablet={12} phone={16}>
+          <Switch>
+            <Route exact path="/" component={NoteList} />
+            <Route path="/calendar" component={NoteCalendar} />
+            <Route path="/add" component={AddNote} />
+            <Route component={NoMatch} />
+          </Switch>
+        <MobileMenu />
+        </Grid.Column>
+      </Grid>
     );
   }
 }
