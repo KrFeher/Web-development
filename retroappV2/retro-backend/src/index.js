@@ -3,48 +3,35 @@ const app = express();
 const db = require('./db');
 const config = require('config');
 const port = config.get('express_port');
+const morgan = require('morgan');
 
 
 app.use(express.json());
-app.use((req, res, next) => {
-  console.log(req.body);
-  next();
+app.use(morgan('combined'));
+
+app.get('/retro/improvements/', async (req, res) => {
+  const opinions = await db.getOpinions();
+  res.send(opinions);
 });
 
-
-
-app.get('/retro/improvements/', (req, res, next) => {
-  res.send(exampleImprovements)
-  next();
-});
-
-app.post('/retro/improvements/', (req, res, next) => {
-  const { text, improvement } = req.body;
-  const id = exampleImprovements.length + 1;
-  const newImprovement = { id, text, improvement }
-  exampleImprovements.push(newImprovement);
-
-  res.send(newImprovement);
-  next();
+app.post('/retro/improvements/', async (req, res) => {
+  const opinion = await db.insertOpinion(req.body)
+  res.send(opinion);
 })
 
-app.delete('/retro/improvements/:id', (req, res) => {
+app.delete('/retro/improvements/:id', async (req, res) => {
   const id = req.params.id;
-  const index = exampleImprovements.findIndex(x => x.id === id);
-  const elementToDelete = exampleImprovements[index];
-  if (elementToDelete) {
-    exampleImprovements.splice(index, 1);
-    res.send(elementToDelete);
+  const foundOpinion = await db.findOpinion(id);
+  console.log(foundOpinion);
+  if (foundOpinion) {
+    const result = await db.deleteOpinion(id);
+    res.status(200).send(result);
   } else {
-    res.status(404).send('Cannot find improvement to delete.');
+    res.status(404).send('Could not find opinion to delete');
   }
+
+
 })
-
-
-app.use((req, res, next) => {
-  console.log(res);
-  next();
-});
 
 app.listen(port, () => console.log(`Listening to port ${port}...`));
 

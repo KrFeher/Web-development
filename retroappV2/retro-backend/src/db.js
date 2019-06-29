@@ -35,9 +35,9 @@ const exampleData = [{
 
 const Opinion = mongoose.model('Opinion', opinionSchema);
 
-init = async () => {
+init = () => {
   try {
-    await mongoose.connect(uri, {
+    mongoose.connect(uri, {
       useNewUrlParser: true
     });
     console.log('Connected to MongoDB...');
@@ -45,12 +45,24 @@ init = async () => {
     console.log('Could not connect to database. ERROR: ', error);
     return;
   }
-  await deleteOldEntries()
-  await insertExamples();
-  await getOpinions();
+
+  Opinion.deleteMany({}, (err) => {
+      console.log('Starting to delete old entries...');
+      if (err) {
+        console.log('Deleting old entries failed...', err);
+      } else {
+        console.error('Successfully deleted old entries...');
+      };
+    })
+    .then(() => {
+      return insertExamples();
+    })
+    .catch((error) => {
+      console.log(error);
+    })
 }
 
-deleteOldEntries = async () => {
+deleteOldEntries = () => {
   console.log('Deleting old database entries:');
   return Opinion.deleteMany({}, (err) => {
     if (err) {
@@ -61,22 +73,51 @@ deleteOldEntries = async () => {
   })
 }
 
-insertExamples = async () => {
-  console.log('Inserting example data...');
-  return Opinion.insertMany(exampleData, (err, docs) => {
+insertExamples = () => {
+  console.log('Starting to insert examples...');
+  return Opinion.insertMany(exampleData, (err) => {
     if (err) {
-      console.error('Inserting example data failed...', err);
+      console.log('Inserting entries failed...', err);
     } else {
-      console.log('Successfully inserted example data...');
-    }
-  })
+      console.error('Successfully inserted examples...');
+    };
+  });
 }
 
 
 getOpinions = async () => {
   console.log('calling getOpinions');
-  return Opinion.find({});
-  console.log(stuff);
+  const opinions = await Opinion.find();
+  return opinions;
+}
+
+insertOpinion = async (opinion) => {
+  const opinionToInsert = new Opinion({
+    text: opinion.text,
+    improvement: opinion.improvement,
+    isImprovement: true,
+  })
+  const op = await opinionToInsert.save();
+  return op;
+}
+
+deleteOpinion = async (id) => {
+  const result = await Opinion.deleteOne({
+    _id: id
+  })
+  return result;
+}
+
+findOpinion = async (id) => {
+  const result = await Opinion.findById(id);
+  return result;
 }
 
 init();
+
+module.exports = {
+  getOpinions,
+  insertOpinion,
+  deleteOpinion,
+  findOpinion
+};
