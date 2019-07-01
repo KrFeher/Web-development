@@ -4,10 +4,12 @@ const db = require('./db');
 const config = require('config');
 const port = config.get('express_port');
 const morgan = require('morgan');
+const cors = require('cors');
 
 
 app.use(express.json());
-app.use(morgan('combined'));
+app.use(cors);
+app.use(morgan('tiny'));
 
 app.get('/retro/improvements/', async (req, res) => {
   const opinions = await db.getOpinions();
@@ -15,7 +17,8 @@ app.get('/retro/improvements/', async (req, res) => {
 });
 
 app.post('/retro/improvements/', async (req, res) => {
-  const opinion = await db.insertOpinion(req.body)
+  console.log(req.body);
+  const opinion = await db.insertManyOpinions(req.body)
   res.send(opinion);
 })
 

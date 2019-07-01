@@ -1,11 +1,11 @@
 import {
   GET_ALL_OPINION_SUCCESS,
-  ADD_OPINION_SUCCESS,
+  ADD_OPINIONS_SUCCESS,
   DELETE_OPINION_SUCCESS,
   UPDATE_OPINION_SUCCESS,
 } from './constants.js';
 
-const baseUrl = 'http://localhost:3001/retro/';
+const baseUrl = 'http://localhost:3001/retro/improvements';
 
 export const getAllOpinionSuccess = (data) => ({
   type: GET_ALL_OPINION_SUCCESS,
@@ -25,26 +25,26 @@ export const getAllOpinion = () => {
   };
 };
 
-export const addOpinionSuccess = (opinion) => ({
-  type: ADD_OPINION_SUCCESS,
+export const addOpinionsSuccess = (opinion) => ({
+  type: ADD_OPINIONS_SUCCESS,
   payload: opinion,
 })
 
-export const addOpinion = (opinion) => {
+export const addOpinions = (opinions) => {
+  debugger;
   return (dispatch) => {
     return fetch(baseUrl, {
       method: 'POST',
-      mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(opinion),
+      body: JSON.stringify(opinions),
     })
       .then(data => {
         return data.json();
       })
       .then(data => {
-        dispatch(addOpinionSuccess(data));
+        dispatch(addOpinionsSuccess(data));
       })
       .catch(err => console.log(err));
   };

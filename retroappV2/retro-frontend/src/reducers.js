@@ -1,6 +1,6 @@
 import {
   GET_ALL_OPINION_SUCCESS,
-  ADD_OPINION_SUCCESS,
+  ADD_OPINIONS_SUCCESS,
   DELETE_OPINION_SUCCESS,
   UPDATE_OPINION_SUCCESS,
 } from './constants.js';
@@ -17,16 +17,16 @@ const opinionReducer = (state = initialState, action = {}) => {
         opinions: action.payload
       }
 
-    case ADD_OPINION_SUCCESS:
+    case ADD_OPINIONS_SUCCESS:
       return {
         ...state,
-        opinion: [...state.opinion, action.payload]
+        opinions: [...state.opinion, action.payload]
       };
 
     case DELETE_OPINION_SUCCESS:
       return {
         ...state,
-        opinion: state.opinion.filter(value => value.id !== action.payload)
+        opinions: state.opinion.filter(value => value.id !== action.payload)
       }
 
     case UPDATE_OPINION_SUCCESS : {
@@ -36,7 +36,7 @@ const opinionReducer = (state = initialState, action = {}) => {
 
       return {
         ...state,
-        opinion: newOpinion
+        opinions: newOpinion
       };
     }
 

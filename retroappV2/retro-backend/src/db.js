@@ -101,6 +101,16 @@ insertOpinion = async (opinion) => {
   return op;
 }
 
+insertManyOpinions = (opinions) => {
+  return Opinion.insertMany(opinions, (err) => {
+    if (err) {
+      console.log('Inserting opinions failed...', err);
+    } else {
+      console.error('Successfully inserted opinions...');
+    };
+  });
+}
+
 deleteOpinion = async (id) => {
   const result = await Opinion.deleteOne({
     _id: id
@@ -118,6 +128,7 @@ init();
 module.exports = {
   getOpinions,
   insertOpinion,
+  insertManyOpinions,
   deleteOpinion,
   findOpinion
 };

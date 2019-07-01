@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
-import { Form } from 'semantic-ui-react';
+import { Form, List, Button, Icon } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { addOpinion, updateOpinion } from '../actions';
+import { addOpinions } from '../actions';
+import uuid from 'uuid';
 
 class AddOpinions extends Component {
   constructor(props) {
@@ -16,7 +17,6 @@ class AddOpinions extends Component {
   }
 
   handleChange = (e, element) => {
-    debugger;
     if (element.checkbox === true) {
       this.setState({ [element.name]: element.checked })
     } else {
@@ -26,14 +26,21 @@ class AddOpinions extends Component {
 
   handleSubmit = () => {
     const { text, isImprovement, recommendation } = this.state;
-    debugger;
-    this.state.allOpinions.push({ text, isImprovement: isImprovement, recommendation })
+    this.state.allOpinions.push({ key: uuid.v1(), text, isImprovement: isImprovement, recommendation })
 
     this.setState({
       text: '',
       recommendation: '',
     })
   }
+
+  removeOpinion = (key) => {
+    const opinionsList = [...this.state.allOpinions];
+    const index = opinionsList.findIndex(opinion => opinion.key === key);
+    opinionsList.splice(index, 1);
+    this.setState({ allOpinions: opinionsList })
+  }
+
 
   render() {
     const { text, isImprovement, recommendation } = this.state
@@ -74,6 +81,32 @@ class AddOpinions extends Component {
           </Form.Field>
           <Form.Button content='Submit'>Add</Form.Button>
         </Form>
+        <List>
+          {this.state.allOpinions.map(opinion => {
+            return (
+              <List.Item key={opinion.key}>
+                <List.Content floated='right'>
+                  <Button color='red' onClick={() => this.removeOpinion(opinion.key)}>Remove</Button>
+                </List.Content>
+                {opinion.isImprovement
+                  ? <Icon name='thumbs down' color='red'></Icon>
+                  : <Icon name='thumbs up' color='green'></Icon>}
+                <List.Content>
+                  <List.Header>{opinion.text}</List.Header>
+                  {opinion.recommendation}
+                </List.Content>
+              </List.Item>
+            )
+          })}
+          {this.state.allOpinions.length > 0
+            ? <Button
+              primary icon labelPosition='right'
+              onClick={()=> this.props.onAddOpinions(this.state.allOpinions)}>
+              {'Go to Summary Page'}
+              <Icon name='right arrow' />
+            </Button>
+            : null}
+        </List>
       </Fragment>
     )
   };
@@ -81,8 +114,7 @@ class AddOpinions extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onAddOpinion: (opinion) => dispatch(addOpinion(opinion)),
-    updateOpinion: (opinion) => dispatch(updateOpinion(opinion)),
+    onAddOpinions: (opinions) => dispatch(addOpinions(opinions)),
   }
 }
 
