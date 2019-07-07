@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Header, Segment, Tab } from 'semantic-ui-react';
+import { Header, Segment } from 'semantic-ui-react';
 import AllOpinions from './AllOpinions';
 import AddOpinions from './AddOpinion';
+import { MemoryRouter, Route, Switch } from 'react-router';
 
 class App extends Component {
   constructor(props) {
@@ -15,12 +16,17 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{maxWidth : '800px', margin: 'auto'}}>
         <Segment>
           <Header as='h1'>Retro App</Header>
         </Segment>
         <Segment>
-          <AddOpinions></AddOpinions>
+          <MemoryRouter>
+          <Switch>
+            <Route exact={true} path="/" component={AddOpinions}></Route>
+            <Route path="/summary" component={AllOpinions}></Route>
+          </Switch>
+          </MemoryRouter>
         </Segment>
       </div>
     )

@@ -5,7 +5,7 @@ import {
   UPDATE_OPINION_SUCCESS,
 } from './constants.js';
 
-const baseUrl = 'http://localhost:3001/retro/improvements';
+const baseUrl = 'http://localhost:3001/retro/improvements/';
 
 export const getAllOpinionSuccess = (data) => ({
   type: GET_ALL_OPINION_SUCCESS,
@@ -14,12 +14,25 @@ export const getAllOpinionSuccess = (data) => ({
 
 export const getAllOpinion = () => {
   return (dispatch) => {
-    return fetch(`${baseUrl}?sortby=fullname`)
+    return fetch(baseUrl, {
+      method: 'GET',
+      mode: 'cors',
+    })
       .then(data => {
         return data.json();
       })
       .then(data => {
-        dispatch(getAllOpinionSuccess(data));
+        const opinionsResponse = data.map(oneOpinion => {
+          const { improvement, isImprovement, text, _id, createdDate} = oneOpinion;
+          return {
+            id: _id,
+            createdDate,
+            recommendation: improvement,
+            isImprovement,
+            text
+          }
+        });
+        dispatch(getAllOpinionSuccess(opinionsResponse));
       })
       .catch(err => console.log(err));
   };
@@ -31,15 +44,23 @@ export const addOpinionsSuccess = (opinion) => ({
 })
 
 export const addOpinions = (opinions) => {
-  debugger;
+  const opinionsToSend = opinions.map(oneOpinion => {
+    const { recommendation, isImprovement, text} = oneOpinion;
+    return {
+      improvement: recommendation,
+      isImprovement,
+      text
+    }
+  });
   return (dispatch) => {
     return fetch(baseUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(opinions),
-    })
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json', 
+        },
+        body: JSON.stringify(opinionsToSend),
+      })
       .then(data => {
         return data.json();
       })
@@ -58,13 +79,13 @@ export const updateOpinionSuccess = (opinion) => ({
 export const updateOpinion = (opinion) => {
   return (dispatch) => {
     return fetch(`${baseUrl}/${opinion.id}`, {
-      method: 'PUT',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(opinion),
-    })
+        method: 'PUT',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(opinion),
+      })
       .then(data => {
         return data.json();
       })
@@ -83,12 +104,12 @@ export const deleteOpinionSuccess = (id) => ({
 export const deleteOpinion = (id) => {
   return (dispatch) => {
     return fetch(`${baseUrl}/${id}`, {
-      method: 'DELETE',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+        method: 'DELETE',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
       .then(data => {
         return data.json();
       })

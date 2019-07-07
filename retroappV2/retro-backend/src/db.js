@@ -18,7 +18,7 @@ const opinionSchema = new mongoose.Schema({
 
 const exampleData = [{
     text: 'This was working out really well',
-    improvement: '-',
+    improvement: null,
     isImprovement: false,
   },
   {

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Form, List, Button, Icon } from 'semantic-ui-react';
+import { Form, List, Button, Icon, Confirm } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { addOpinions } from '../actions';
 import uuid from 'uuid';
@@ -12,12 +12,19 @@ class AddOpinions extends Component {
       text: '',
       isImprovement: false,
       recommendation: '',
-      allOpinions: [],
+      allOpinions: [{
+        key: 1,
+        text: 'This was working out really well',
+        improvement: null,
+        isImprovement: false,
+      }],
+      confirmOpen: false,
     }
   }
 
   handleChange = (e, element) => {
-    if (element.checkbox === true) {
+    debugger;
+    if (element.type === 'checkbox') {
       this.setState({ [element.name]: element.checked })
     } else {
       this.setState({ [element.name]: element.value })
@@ -41,6 +48,18 @@ class AddOpinions extends Component {
     this.setState({ allOpinions: opinionsList })
   }
 
+  onSummaryClick = () => {
+    this.setState({confirmOpen: true})
+  }
+
+  onConfirmClose = () => this.setState({ confirmOpen: false });
+
+  onConfirmAccept = () => {
+    this.setState({ confirmOpen: false });
+    this.props.onAddOpinions(this.state.allOpinions);
+    this.props.history.push('/summary');
+  }
+  
 
   render() {
     const { text, isImprovement, recommendation } = this.state
@@ -67,8 +86,7 @@ class AddOpinions extends Component {
               onChange={this.handleChange}
               type='checkbox'
               fitted
-              toggle
-              checkbox />
+              toggle />
           </Form.Field>
           <Form.Field hidden={!isImprovement}>
             <Form.Input
@@ -79,7 +97,7 @@ class AddOpinions extends Component {
               type='text'
               onChange={this.handleChange} />
           </Form.Field>
-          <Form.Button content='Submit'>Add</Form.Button>
+          <Form.Button content='Submit'></Form.Button>
         </Form>
         <List>
           {this.state.allOpinions.map(opinion => {
@@ -101,11 +119,17 @@ class AddOpinions extends Component {
           {this.state.allOpinions.length > 0
             ? <Button
               primary icon labelPosition='right'
-              onClick={()=> this.props.onAddOpinions(this.state.allOpinions)}>
+              onClick={this.onSummaryClick}>
               {'Go to Summary Page'}
               <Icon name='right arrow' />
             </Button>
             : null}
+          <Confirm 
+          open={this.state.confirmOpen} 
+          onCancel={this.onConfirmClose} 
+          onConfirm={this.onConfirmAccept}
+          header='Point of no return!'
+          content='Moving to summary screen will will post all your opinion anonymously. Are you sure you want to continue?' />
         </List>
       </Fragment>
     )
