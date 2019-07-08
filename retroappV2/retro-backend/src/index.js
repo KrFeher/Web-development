@@ -5,11 +5,11 @@ const config = require('config');
 const port = config.get('express_port');
 const morgan = require('morgan');
 const cors = require('cors');
+const io = require('socket.io')(5000);
 
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use(cors());
-
 
 app.get('/', (req, res) => {
   res.send('test');
@@ -22,7 +22,9 @@ app.get('/retro/improvements/', async (req, res) => {
 
 app.post('/retro/improvements/', async (req, res) => {
   console.log(req.body);
-  const opinion = await db.insertManyOpinions(req.body)
+  const opinion = await db.insertManyOpinions(req.body);
+  const opinions = await db.getOpinions();
+  io.emit('new-opinions', opinions);
   res.send(opinion);
 });
 
@@ -40,6 +42,10 @@ app.delete('/retro/improvements/:id', async (req, res) => {
 
 app.listen(port, () => console.log(`Listening to port ${port}...`));
 
-console.log(`The application is in ${config.get('name')} environment mode.`);
+io.on('connection', socket => {
+  socket.emit('initialise', 'Socket connection established');
+})
 
-// think about websockets.
+
+
+console.log(`The application is in ${config.get('name')} environment mode.`);

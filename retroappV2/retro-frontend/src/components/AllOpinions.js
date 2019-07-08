@@ -1,20 +1,39 @@
 import React, { Component, Fragment } from 'react';
-import { Icon, List, Button } from 'semantic-ui-react';
-import { getAllOpinion } from '../actions';
-import { connect } from 'react-redux';
+import { Icon, List } from 'semantic-ui-react';
+const io = require('socket.io-client');
 
 class AllOpinions extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      opinionList: [],
+    }
+  }
+
   componentDidMount() {
-    this.props.getOpinions();
+    const socket = io('http://localhost:5000');
+    socket.on('new-opinions', opinions => {
+      const mappedOpinions = opinions.map(opinion => {
+        const { improvement, isImprovement, text, _id, createdDate } = opinion;
+        return {
+          id: _id,
+          createdDate,
+          recommendation: improvement,
+          isImprovement,
+          text
+        }
+      });
+      this.setState({ opinionList: mappedOpinions });
+    })
   }
 
   render() {
-    const opinions = this.props.opinionList;
+    const opinions = this.state.opinionList;
     return (
       <Fragment>
-        <Button circular icon='refresh' onClick={this.props.getOpinions} />
         <List>
-          {opinions.map(opinion => {
+          {opinions && opinions.map(opinion => {
             return (
               <List.Item key={opinion.id}>
                 <List.Content floated='right'>
@@ -35,16 +54,4 @@ class AllOpinions extends Component {
   };
 }
 
-const mapStateToProps = state => {
-  return {
-    opinionList: state.opinions,
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    getOpinions: () => dispatch(getAllOpinion()),
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AllOpinions);
+export default AllOpinions;

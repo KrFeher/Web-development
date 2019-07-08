@@ -49,7 +49,7 @@ class AddOpinions extends Component {
   }
 
   onSummaryClick = () => {
-    this.setState({confirmOpen: true})
+    this.setState({ confirmOpen: true })
   }
 
   onConfirmClose = () => this.setState({ confirmOpen: false });
@@ -59,7 +59,7 @@ class AddOpinions extends Component {
     this.props.onAddOpinions(this.state.allOpinions);
     this.props.history.push('/summary');
   }
-  
+
 
   render() {
     const { text, isImprovement, recommendation } = this.state
@@ -124,12 +124,12 @@ class AddOpinions extends Component {
               <Icon name='right arrow' />
             </Button>
             : null}
-          <Confirm 
-          open={this.state.confirmOpen} 
-          onCancel={this.onConfirmClose} 
-          onConfirm={this.onConfirmAccept}
-          header='Point of no return!'
-          content='Moving to summary screen will will post all your opinion anonymously. Are you sure you want to continue?' />
+          <Confirm
+            open={this.state.confirmOpen}
+            onCancel={this.onConfirmClose}
+            onConfirm={this.onConfirmAccept}
+            header='Point of no return!'
+            content='Moving to summary screen will will post all your opinion anonymously. Are you sure you want to continue?' />
         </List>
       </Fragment>
     )
