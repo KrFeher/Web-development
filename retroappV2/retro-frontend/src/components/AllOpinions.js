@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Icon, List } from 'semantic-ui-react';
+import { Icon, List, Grid, Segment, Header, Divider } from 'semantic-ui-react';
 const io = require('socket.io-client');
 
 class AllOpinions extends Component {
@@ -29,26 +29,62 @@ class AllOpinions extends Component {
   }
 
   render() {
-    const opinions = this.state.opinionList;
+    const opinions = [...this.state.opinionList];
+    const badOpinions = [];
+    const goodOpinions = [];
+    opinions.forEach(opinion => {
+      if (opinion.isImprovement) {
+        badOpinions.push(opinion);
+      } else {
+        goodOpinions.push(opinion);
+      }
+    });
     return (
       <Fragment>
-        <List>
-          {opinions && opinions.map(opinion => {
-            return (
-              <List.Item key={opinion.id}>
-                <List.Content floated='right'>
-                </List.Content>
-                {opinion.isImprovement
-                  ? <Icon name='thumbs down' color='red'></Icon>
-                  : <Icon name='thumbs up' color='green'></Icon>}
-                <List.Content>
-                  <List.Header>{opinion.text}</List.Header>
-                  {opinion.recommendation}
-                </List.Content>
-              </List.Item>
-            )
-          })}
-        </List>
+        <Grid container columns={2} stackable>
+          <Grid.Column>
+            <Segment>
+              <Header as='h3'> What went well?</Header>
+              <Divider fitted />
+              <List>
+                {goodOpinions && goodOpinions.map(opinion => {
+                  return (
+                    <List.Item key={opinion.id}>
+                      <List.Content floated='right'>
+                      </List.Content>
+                      <Icon name='thumbs up' color='green'></Icon>
+                      <List.Content>
+                        <List.Header>{opinion.text}</List.Header>
+                      </List.Content>
+                    </List.Item>
+                  )
+                })}
+              </List>
+            </Segment>
+          </Grid.Column>
+          <Grid.Column>
+            <Segment>
+              <Header as='h3'> What went less well?</Header>
+              <Divider fitted />
+              <List>
+                {badOpinions && badOpinions.map(opinion => {
+                  return (
+                    <List.Item key={opinion.id}>
+                      <List.Content floated='right'>
+                      </List.Content>
+                      <Icon name='thumbs down' color='red'></Icon>
+                      <List.Content>
+                        <List.Header>{opinion.text}</List.Header>
+                        {opinion.recommendation}
+                      </List.Content>
+                    </List.Item>
+                  )
+                })}
+              </List>
+            </Segment>
+          </Grid.Column>
+        </Grid>
+
       </Fragment>
     )
   };

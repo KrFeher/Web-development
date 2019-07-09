@@ -18,12 +18,14 @@ app.get('/', (req, res) => {
 app.get('/retro/improvements/', async (req, res) => {
   const opinions = await db.getOpinions();
   res.send(opinions);
-}); 
+});
 
 app.post('/retro/improvements/', async (req, res) => {
   console.log(req.body);
   const opinion = await db.insertManyOpinions(req.body);
   const opinions = await db.getOpinions();
+  console.log(opinion);
+  console.log(opinions);
   io.emit('new-opinions', opinions);
   res.send(opinion);
 });

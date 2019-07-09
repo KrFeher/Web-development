@@ -12,15 +12,17 @@ class AddOpinions extends Component {
       text: '',
       isImprovement: false,
       recommendation: '',
-      allOpinions: [{
-        key: 1,
-        text: 'This was working out really well',
-        improvement: null,
-        isImprovement: false,
-      }],
+      allOpinions: [],
       confirmOpen: false,
     }
   }
+  
+  // {
+  //       key: 1,
+  //       text: 'This was working out really well',
+  //       improvement: null,
+  //       isImprovement: false,
+  //     }
 
   handleChange = (e, element) => {
     debugger;
@@ -97,7 +99,7 @@ class AddOpinions extends Component {
               type='text'
               onChange={this.handleChange} />
           </Form.Field>
-          <Form.Button content='Submit'></Form.Button>
+          <Form.Button content='Add'></Form.Button>
         </Form>
         <List>
           {this.state.allOpinions.map(opinion => {

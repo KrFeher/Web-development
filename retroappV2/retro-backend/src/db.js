@@ -16,22 +16,21 @@ const opinionSchema = new mongoose.Schema({
   isImprovement: Boolean,
 })
 
-const exampleData = [{
-    text: 'This was working out really well',
-    improvement: null,
-    isImprovement: false,
-  },
-  {
-    text: 'This isnt that great',
-    improvement: 'Should be better',
-    isImprovement: true,
-  },
-  {
-    text: 'Im sleepy',
-    improvement: 'should have slept more',
-    isImprovement: true,
-  }
-];
+// const exampleData = [{
+//     text: 'This was working out really well',
+//     isImprovement: false,
+//   },
+//   {
+//     text: 'This isnt that great',
+//     improvement: 'Should be better',
+//     isImprovement: true,
+//   },
+//   {
+//     text: 'Im sleepy',
+//     improvement: 'should have slept more',
+//     isImprovement: true,
+//   }
+// ];
 
 const Opinion = mongoose.model('Opinion', opinionSchema);
 
@@ -102,13 +101,7 @@ insertOpinion = async (opinion) => {
 }
 
 insertManyOpinions = (opinions) => {
-  return Opinion.insertMany(opinions, (err) => {
-    if (err) {
-      console.log('Inserting opinions failed...', err);
-    } else {
-      console.error('Successfully inserted opinions...');
-    };
-  });
+  return Opinion.insertMany(opinions); 
 }
 
 deleteOpinion = async (id) => {
