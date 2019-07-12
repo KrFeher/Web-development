@@ -5,7 +5,7 @@ import {
   UPDATE_OPINION_SUCCESS,
 } from './constants.js';
 
-const baseUrl = 'http://localhost:3001/retro/improvements/';
+const baseUrl = '/retro/improvements/';
 
 export const getAllOpinionSuccess = (data) => ({
   type: GET_ALL_OPINION_SUCCESS,
@@ -78,7 +78,7 @@ export const updateOpinionSuccess = (opinion) => ({
 
 export const updateOpinion = (opinion) => {
   return (dispatch) => {
-    return fetch(`${baseUrl}/${opinion.id}`, {
+    return fetch(`/${opinion.id}`, {
         method: 'PUT',
         mode: 'cors',
         headers: {
@@ -103,7 +103,7 @@ export const deleteOpinionSuccess = (id) => ({
 
 export const deleteOpinion = (id) => {
   return (dispatch) => {
-    return fetch(`${baseUrl}/${id}`, {
+    return fetch(`/${id}`, {
         method: 'DELETE',
         mode: 'cors',
         headers: {
